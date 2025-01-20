@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Cores primárias -->
+    <color name="primaryTextColor">#212121</color> <!-- Preto escuro -->
+    <color name="secondaryTextColor">#757575</color> <!-- Cinza claro -->
+    <color name="accentColor">#6200EE</color> <!-- Roxo vibrante -->
+    <color name="backgroundColor">#F5F5F5</color> <!-- Cinza muito claro -->
+    <color name="hintColor">#9E9E9E</color> <!-- Cinza médio -->
+
+    <!-- Fundo para respostas -->
+    <color name="responseBackgroundColor">#FFFFFF</color> <!-- Branco -->
+</resources>
