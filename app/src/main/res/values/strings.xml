@@ -14,11 +14,18 @@
     <string name="string_4">Texto copiado para a área de transferência.</string>
     <string name="string_5">Nada para copiar.</string>
     <string name="model_name">gemini-1.5-flash</string>
-    <string name="key">AIzaSyAOBhSlxYbmGV00zDLaXokwdk8-syLHC1Y</string>
+    <string name="key">AIzaSyB2lqMX2iU3XPJiGD114ljiSyUnX-LNow0</string>
     <string name="string_6">Nenhum poema foi gerado. Tente novamente.</string>
     <string name="string_7">Erro ao gerar poema:</string>
     <string name="string_8">Gerando</string>
     <string name="empt_text">Gerando</string>
+    <string name="size_poem">Qual o tamanho do poema?</string>
+    <string name="medium">Médio</string>
+    <string name="tiny">Pequeno</string>
+    <string name="big">Grande</string>
+    <string name="string_9">Por favor, escolha o tamanho do poema (Pequeno, Médio ou Grande).</string>
+    <string name="with">com</string>
+    <string name="stanzas">estrofes</string>
 
 
 </resources>

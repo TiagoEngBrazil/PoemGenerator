@@ -9,10 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ai.client.generativeai.GenerativeModel
@@ -20,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         val tvResult = findViewById<TextView>(R.id.responseTextView)
         val btnCopy = findViewById<Button>(R.id.copyButton)
         val textOrientation = findViewById<TextView>(R.id.textOrientation)
+        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
 
         val regex = Regex("^[a-zA-Z0-9À-ÿ\\s]*$")
 
@@ -69,8 +68,25 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Capturar tamanho do poema pelo RadioButton selecionado
+            val selectedId = radioGroup.checkedRadioButtonId
+            val estrofes = when (selectedId) {
+                R.id.radioButton1 -> Random.nextInt(1, 3)      // Pequeno: 1 ou 2
+                R.id.radioButton2 -> Random.nextInt(3, 5)      // Médio: 3 ou 4
+                R.id.radioButton3 -> Random.nextInt(5, 8)      // Grande: 5 a 7 (ou mais)
+                else -> {
+                    Toast.makeText(
+                        this,
+                        R.string.string_9,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+            }
+
+            // Montar prompt final incluindo o número de estrofes
             val modifiedPrompt =
-                getString(R.string.write_poem1) + prompt + getString(R.string.string_2)
+                "${getString(R.string.write_poem1)} $prompt ${getString(R.string.with)} $estrofes ${getString(R.string.stanzas)}. ${getString(R.string.string_2)}"
 
             generatePoem(modifiedPrompt, tvResult, btnCopy, textOrientation)
         }
@@ -78,7 +94,6 @@ class MainActivity : AppCompatActivity() {
         btnCopy.setOnClickListener {
             val generatedText = tvResult.text.toString()
             if (generatedText.isNotBlank()) {
-                // Copia o texto para a área de transferência
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText(getString(R.string.string_3), generatedText)
                 clipboard.setPrimaryClip(clip)
@@ -98,11 +113,11 @@ class MainActivity : AppCompatActivity() {
         btnCopy: Button,
         textOrientation: TextView
     ) {
-        if (isGenerating) return // Impede múltiplas execuções simultâneas
+        if (isGenerating) return
 
         isGenerating = true
         tvResult.text = ""
-        startGeneratingAnimation(tvResult) // Inicia a animação
+        startGeneratingAnimation(tvResult)
 
         val generativeModel = GenerativeModel(
             modelName = getString(R.string.model_name),
@@ -114,8 +129,8 @@ class MainActivity : AppCompatActivity() {
                 val response = generativeModel.generateContent(prompt)
 
                 withContext(Dispatchers.Main) {
-                    stopGeneratingAnimation() // Para a animação
-                    isGenerating = false // Libera a flag
+                    stopGeneratingAnimation()
+                    isGenerating = false
 
                     val generatedPoem = response.text ?: ""
                     tvResult.text = if (generatedPoem.isNotBlank()) {
@@ -130,8 +145,8 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    stopGeneratingAnimation() // Para a animação
-                    isGenerating = false // Libera a flag
+                    stopGeneratingAnimation()
+                    isGenerating = false
                     Toast.makeText(
                         this@MainActivity,
                         getString(R.string.string_7) + e.message,
@@ -154,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
                 if (isGenerating) {
                     textView.text = baseText + ".".repeat(dotCount)
-                    dotCount = (dotCount + 1) % 4 // Alterna entre 0 e 3 pontos
+                    dotCount = (dotCount + 1) % 4
                     handler.postDelayed(this, 500)
                 }
             }
